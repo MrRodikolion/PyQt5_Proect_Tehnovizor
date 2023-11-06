@@ -176,7 +176,7 @@ class Ui_MainWindow(QMainWindow):
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1000, 800)
+        MainWindow.resize(1315, 823)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.centralwidget)
@@ -198,6 +198,8 @@ class Ui_MainWindow(QMainWindow):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.video.sizePolicy().hasHeightForWidth())
         self.video.setSizePolicy(sizePolicy)
+        self.video.setMinimumSize(QtCore.QSize(640, 480))
+        self.video.setText("")
         self.video.setObjectName("video")
         self.gridLayout_4.addWidget(self.video, 1, 0, 1, 1)
         self.fixedBox = QtWidgets.QCheckBox(self.tab)
@@ -219,6 +221,7 @@ class Ui_MainWindow(QMainWindow):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.photo.sizePolicy().hasHeightForWidth())
         self.photo.setSizePolicy(sizePolicy)
+        self.photo.setMinimumSize(QtCore.QSize(640, 480))
         self.photo.setText("")
         self.photo.setObjectName("photo")
         self.gridLayout_3.addWidget(self.photo, 1, 0, 1, 1)
