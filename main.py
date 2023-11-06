@@ -8,10 +8,10 @@ import sys
 
 from PyQt5.QtWidgets import QApplication
 
-from testing_ui import MegaApp
+from testing_ui import TehnoVizor
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = MegaApp()
+    ex = TehnoVizor()
     ex.show()
     sys.exit(app.exec_())
