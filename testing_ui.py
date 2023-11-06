@@ -12,7 +12,7 @@ from datetime import datetime
 from speech_recognition import Recognizer, Microphone, UnknownValueError, WaitTimeoutError, RequestError
 
 
-class Ui_MainWindow(QMainWindow):
+class TehnoVizor(QMainWindow):
     def __init__(self):
         pytesseract.pytesseract.tesseract_cmd = "./tesseract/tesseract.exe"
         super().__init__()
@@ -418,7 +418,7 @@ class CameraThread(QThread):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = Ui_MainWindow()
+    ex = TehnoVizor()
     ex.show()
 
     sys.exit(app.exec_())
