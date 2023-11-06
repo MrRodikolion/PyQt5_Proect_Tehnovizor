@@ -327,7 +327,7 @@ class TehnoVizor(QMainWindow):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "ТехноВизор"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "ТекстоВизор"))
         self.fixedBox.setText(_translate("MainWindow", "Зафиксировать"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Видео"))
         self.getPhotoButton.setText(_translate("MainWindow", "Выбрать фото"))
