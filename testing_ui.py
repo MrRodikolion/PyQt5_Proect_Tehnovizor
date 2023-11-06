@@ -385,7 +385,7 @@ class CameraThread(QThread):
 
                 to_ui = (p, text)
                 self.changePixmap.emit(to_ui)
-            elif self.isfixBox.isChecked():
+            elif self.isfixBox.isChecked() and not self.isStop:
                 pass
             else:
                 cap.release()
