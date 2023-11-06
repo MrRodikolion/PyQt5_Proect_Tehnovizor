@@ -48,6 +48,12 @@ class Ui_MainWindow(QMainWindow):
                 self.cur.execute(f'''INSERT INTO history(date, text) 
                             VALUES(\'{datetime.now().strftime("%d.%m.%Y %H:%M")}\', \"{text}\")''')
                 self.con.commit()
+
+            self.cam_th.isStop = True
+            self.cam_th.wait()
+            self.mic_th.wait()
+
+
             a0.accept()
         else:
             a0.ignore()
@@ -72,7 +78,7 @@ class Ui_MainWindow(QMainWindow):
         if self.tabWidget.currentIndex() == 0:
             self.cam_th.start()
         elif self.tabWidget.currentIndex() == 2:
-            history = self.cur.execute('''SELECT * FROM history''').fetchall()
+            history = self.cur.execute('''SELECT * FROM history''').fetchall()[::-1]
             self.tableWidget.setRowCount(0)
             for y, row in enumerate(history):
                 self.tableWidget.setRowCount(self.tableWidget.rowCount() + 1)
@@ -119,12 +125,14 @@ class Ui_MainWindow(QMainWindow):
 
     @pyqtSlot(tuple)
     def setImage(self, img_data):
-        self.video.setPixmap(QPixmap.fromImage(img_data[0]))
-        self.textEdit.setText(str(img_data[1]))
+        if not self.cam_th.isStop:
+            self.video.setPixmap(QPixmap.fromImage(img_data[0]))
+            self.textEdit.setText(str(img_data[1]))
 
     def loadPhoto(self):
         try:
-            fname = QFileDialog.getOpenFileName(self, 'Выбрать фото', '.', '(*.jpg);;(*.png);;Все файлы (*)')[0]
+            fname = QFileDialog.getOpenFileName(self, 'Выбрать фото', '.',
+                                                'Изображение (*.jpg *.png);;Все файлы (*)')[0]
             if fname == '':
                 raise FileNotFoundError
 
@@ -349,12 +357,13 @@ class CameraThread(QThread):
         self.tabWidget = tabW
         self.isfixBox = isFix
         self.statusBar = statusBar
+        self.isStop = False
 
     def run(self):
         cap = cv2.VideoCapture(0)
         self.statusBar.showMessage('Камера подключена')
         while cv2.waitKey(1):
-            if self.tabWidget.currentIndex() == 0 and not self.isfixBox.isChecked():
+            if self.tabWidget.currentIndex() == 0 and not self.isfixBox.isChecked() and not self.isStop:
                 ret, frame = cap.read()
                 if not ret:
                     self.statusBar.showMessage('Камера работает неправильно')
