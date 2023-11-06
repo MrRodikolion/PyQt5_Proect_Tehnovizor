@@ -9,7 +9,7 @@ import sqlite3 as sql
 import cv2
 import pytesseract
 from datetime import datetime
-from speech_recognition import Recognizer, Microphone, UnknownValueError, WaitTimeoutError
+from speech_recognition import Recognizer, Microphone, UnknownValueError, WaitTimeoutError, RequestError
 
 
 class Ui_MainWindow(QMainWindow):
@@ -341,9 +341,12 @@ class MicThread(QThread):
             self.audioToText.emit(text)
         except WaitTimeoutError or UnknownValueError:
             pass
+        except RequestError:
+            self.statusBar.showMessage("Отсутствует подключение к интернету")
         except Exception as e:
             self.statusBar.clearMessage()
             self.statusBar.showMessage(str(e))
+            print([e])
         self.mic_btn.setText("🎙️")
         self.mic_btn.setEnabled(True)
 
