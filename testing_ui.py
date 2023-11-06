@@ -323,6 +323,7 @@ class TehnoVizor(QMainWindow):
 
         self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         self.tableWidget.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
