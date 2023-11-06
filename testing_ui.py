@@ -24,13 +24,25 @@ class Ui_MainWindow(QMainWindow):
         self.saveButton.clicked.connect(self.saveText)
         self.tabWidget.currentChanged.connect(self.tabChanged)
         self.loadButton.clicked.connect(self.loadFromHistory)
-
         self.micButton.clicked.connect(self.getWhisperPres)
+        self.flushButton.clicked.connect(self.flushHistory)
 
         self.recognizer = Recognizer()
 
         self.startThreads()
         self.loadLast()
+
+    def flushHistory(self):
+        self.cur.execute('''DELETE FROM history''')
+        self.con.commit()
+
+        history = self.cur.execute('''SELECT * FROM history''').fetchall()[::-1]
+        self.tableWidget.setRowCount(0)
+        for y, row in enumerate(history):
+            self.tableWidget.setRowCount(self.tableWidget.rowCount() + 1)
+            for x, elem in enumerate(row):
+                self.tableWidget.setItem(y, x, QTableWidgetItem(str(elem)))
+        self.tableWidget.resizeColumnsToContents()
 
     def loadLast(self):
         last_text = self.cur.execute('''SELECT text FROM history ORDER BY id DESC LIMIT 1''').fetchone()
@@ -53,7 +65,6 @@ class Ui_MainWindow(QMainWindow):
             self.cam_th.isStop = True
             self.cam_th.wait()
             self.mic_th.wait()
-
 
             a0.accept()
         else:
@@ -254,6 +265,14 @@ class Ui_MainWindow(QMainWindow):
         self.loadButton = QtWidgets.QPushButton(self.tab_3)
         self.loadButton.setObjectName("loadButton")
         self.gridLayout.addWidget(self.loadButton, 0, 1, 1, 1)
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_4.addItem(spacerItem1)
+        self.flushButton = QtWidgets.QPushButton(self.tab_3)
+        self.flushButton.setObjectName("flushButton")
+        self.horizontalLayout_4.addWidget(self.flushButton)
+        self.gridLayout.addLayout(self.horizontalLayout_4, 0, 0, 1, 1)
         self.tabWidget.addTab(self.tab_3, "")
         self.horizontalLayout.addWidget(self.tabWidget)
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
@@ -279,8 +298,8 @@ class Ui_MainWindow(QMainWindow):
         self.gridLayout_2.addWidget(self.saveButton, 0, 0, 1, 1)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        spacerItem1 = QtWidgets.QSpacerItem(100, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.horizontalLayout_3.addItem(spacerItem1)
+        spacerItem2 = QtWidgets.QSpacerItem(100, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem2)
         self.micButton = QtWidgets.QPushButton(self.groupBox)
         self.micButton.setObjectName("micButton")
         self.horizontalLayout_3.addWidget(self.micButton)
@@ -302,18 +321,19 @@ class Ui_MainWindow(QMainWindow):
 
         self.tableWidget.setHorizontalHeaderLabels(('id', 'Дата Время', 'Текст'))
 
-        self.tableWidget.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
-        self.tableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeMode.Stretch)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Текстовизор"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.fixedBox.setText(_translate("MainWindow", "Зафиксировать"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Видео"))
         self.getPhotoButton.setText(_translate("MainWindow", "Выбрать фото"))
         self.reloadButton.setText(_translate("MainWindow", "🔁"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Фото"))
         self.loadButton.setText(_translate("MainWindow", "Загрузить"))
+        self.flushButton.setText(_translate("MainWindow", "Очистить"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "История"))
         self.saveButton.setText(_translate("MainWindow", "Сохранить"))
         self.micButton.setText(_translate("MainWindow", "🎙️"))
