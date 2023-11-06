@@ -42,6 +42,7 @@ class Ui_MainWindow(QMainWindow):
                                   QMessageBox.Yes, QMessageBox.Cancel)
 
         if ok == QMessageBox.Yes:
+            self.hide()
             text = self.textEdit.toPlainText()
             if text != '':
                 text = ''.join(map(lambda x: '\'' if x == '\"' else x, text))
@@ -346,7 +347,6 @@ class MicThread(QThread):
         except Exception as e:
             self.statusBar.clearMessage()
             self.statusBar.showMessage(str(e))
-            print([e])
         self.mic_btn.setText("🎙️")
         self.mic_btn.setEnabled(True)
 
