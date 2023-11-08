@@ -1,25 +1,46 @@
+import sys
+
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5.QtCore import QThread, pyqtSignal, pyqtSlot, Qt
-from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtGui import QImage, QPixmap, QPainter, QColor
 
 import cv2
 import pytesseract
+
 
 class BookVizor(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.startThreads()
+        self.book_img_data = None
+
+        self.selectBtn.clicked.connect(self.update)
 
     @pyqtSlot(tuple)
-    def imgWorck(self, data):
-        self.video.setPixmap(QPixmap.fromImage(data[0]))
+    def imgSliceWork(self, book_data):
+        try:
+            self.book_img_data = book_data[1:]
+
+            if book_data[1] is not None:
+                cv2.rectangle(book_data[0], book_data[2], book_data[3], (0, 0, 255), 1)
+
+            rgbImage = cv2.cvtColor(book_data[0], cv2.COLOR_BGR2RGB)
+            h, w, ch = rgbImage.shape
+            bytesPerLine = ch * w
+            qimg = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
+            qimg = qimg.scaled(640, 480, Qt.KeepAspectRatio)
+            self.video.setPixmap(QPixmap.fromImage(qimg))
+        except Exception as e:
+            print(e)
+
 
     def startThreads(self):
-        self.cam_th = CameraThread(self, self.statusbar)
-        self.cam_th.changePixmap.connect(self.imgWorck)
+        self.cam_th = CameraThread(self, self.statusbar, self.thresholdSlider)
+        self.cam_th.selectImg.connect(self.imgSliceWork)
         self.cam_th.start()
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1305, 834)
@@ -38,9 +59,9 @@ class BookVizor(QMainWindow):
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
-        self.SelectBtn = QtWidgets.QPushButton(self.groupBox)
-        self.SelectBtn.setObjectName("SelectBtn")
-        self.horizontalLayout_5.addWidget(self.SelectBtn)
+        self.selectBtn = QtWidgets.QPushButton(self.groupBox)
+        self.selectBtn.setObjectName("SelectBtn")
+        self.horizontalLayout_5.addWidget(self.selectBtn)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem)
         self.verticalLayout_3.addLayout(self.horizontalLayout_5)
@@ -123,10 +144,13 @@ class BookVizor(QMainWindow):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.thresholdSlider.setMaximum(255)
+        self.thresholdSlider.setValue(150)
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.SelectBtn.setText(_translate("MainWindow", "Выделить"))
+        self.selectBtn.setText(_translate("MainWindow", "Выделить"))
         self.label_2.setText(_translate("MainWindow", "Чувтсвительность: "))
         self.resetBtn.setText(_translate("MainWindow", "Сбросить"))
         self.saveImgBtn.setText(_translate("MainWindow", "Сохранить"))
@@ -136,33 +160,66 @@ class BookVizor(QMainWindow):
 
 
 class CameraThread(QThread):
-    changePixmap = pyqtSignal(tuple)
+    selectImg = pyqtSignal(tuple)
 
-    def __init__(self, par, statusBar: QtWidgets.QStatusBar):
+    def __init__(self, par, statusBar: QtWidgets.QStatusBar, slider: QtWidgets.QSlider):
         super().__init__(par)
 
         self.statusBar = statusBar
+        self.slider = slider
+
         self.isStop = False
 
     def run(self):
-        cap = cv2.VideoCapture(0)
-        self.statusBar.showMessage('Камера подключена')
-        while cv2.waitKey(1):
-            if not self.isStop:
-                ret, frame = cap.read()
-                if not ret:
-                    self.statusBar.showMessage('Камера работает неправильно')
+        try:
+            cap = cv2.VideoCapture(0)
+            self.statusBar.showMessage('Камера подключена')
+            while cv2.waitKey(1):
+                if not self.isStop:
+                    ret, frame = cap.read()
+                    if not ret:
+                        self.statusBar.showMessage('Камера работает неправильно')
+                        break
+
+                    l_th = self.slider.value()
+
+                    img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                    img_gray = cv2.medianBlur(img_gray, 7)
+                    _, img_gray = cv2.threshold(img_gray, l_th, 255, cv2.THRESH_BINARY)
+
+                    img_canny = cv2.Canny(img_gray, 40, 255, 2)
+                    contours = cv2.findContours(img_canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                    contours = contours[0]
+
+                    max_area = 0
+                    book_img = None
+                    for i in contours:
+                        area_contur = cv2.contourArea(i)
+                        if area_contur > 2100 and max_area < area_contur:
+                            max_area = area_contur
+                            perimetr = 0.02 * cv2.arcLength(i, True)
+                            approx = cv2.approxPolyDP(i, perimetr, True)
+                            if len(approx) >= 4:
+                                rect = cv2.boundingRect(i)
+
+                                book_img = frame[rect[1]:rect[1] + rect[3], rect[0]:rect[0] + rect[2]]
+                                book_pt1 = (rect[0], rect[1])
+                                book_pt2 = (rect[0] + rect[2], rect[1] + rect[3])
+
+                    if book_img is not None:
+                        self.selectImg.emit((frame, book_img, book_pt1, book_pt2))
+                    else:
+                        self.selectImg.emit((frame, None))
+                else:
+                    cap.release()
+                    self.statusBar.showMessage('Камера отключена')
                     break
+        except Exception as e:
+            print(e)
 
-                rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                h, w, ch = rgbImage.shape
-                bytesPerLine = ch * w
-                convertToQtFormat = QImage(rgbImage.data, w, h, bytesPerLine, QImage.Format_RGB888)
-                p = convertToQtFormat.scaled(640, 480, Qt.KeepAspectRatio)
 
-                to_ui = (p, )
-                self.changePixmap.emit(to_ui)
-            else:
-                cap.release()
-                self.statusBar.showMessage('Камера отключена')
-                break
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = BookVizor()
+    ex.show()
+    sys.exit(app.exec_())
