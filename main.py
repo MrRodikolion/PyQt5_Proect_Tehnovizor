@@ -8,7 +8,7 @@ import sys
 
 from PyQt5.QtWidgets import QApplication
 
-from tehnovizor import TehnoVizor
+from Windows_.tehnovizor import TehnoVizor
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

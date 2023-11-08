@@ -99,7 +99,7 @@ class TehnoVizor(QMainWindow):
             self.tableWidget.resizeColumnsToContents()
 
     def loadDB(self):
-        self.con = sql.connect('history_db.sqlite3')
+        self.con = sql.connect('../history_db.sqlite3')
         self.cur = self.con.cursor()
         self.cur.execute('''CREATE TABLE IF NOT EXISTS history (
                         id INTEGER PRIMARY KEY,

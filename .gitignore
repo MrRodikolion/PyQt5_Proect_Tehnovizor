@@ -1,6 +1,6 @@
-/bakups/
-/lab/
-/tesseract/
-/.idea/
-cool_ui.py
+bakups/
+lab/
+tesseract/
+.idea/
+uis/cool_ui.py
 history_db.sqlite3
