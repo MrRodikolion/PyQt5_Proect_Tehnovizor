@@ -14,7 +14,7 @@ from speech_recognition import Recognizer, Microphone, UnknownValueError, WaitTi
 
 class TehnoVizor(QMainWindow):
     def __init__(self):
-        pytesseract.pytesseract.tesseract_cmd = "./tesseract/tesseract.exe"
+        pytesseract.pytesseract.tesseract_cmd = "C:\\Users\\Mr.Rodikolion\\PycharmProjects\\yandex_PyQt5\\tesseract/tesseract.exe"
         super().__init__()
         self.setupUi(self)
         self.loadDB()
