@@ -1,7 +1,7 @@
 import sys
 
-from tehnovizor import TehnoVizor
-from bookvizor import BookVizor
+from Windows_.tehnovizor import TehnoVizor
+from Windows_.bookvizor import BookVizor
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QApplication

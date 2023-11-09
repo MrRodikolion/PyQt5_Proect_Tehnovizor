@@ -8,10 +8,10 @@ import sys
 
 from PyQt5.QtWidgets import QApplication
 
-from Windows_.tehnovizor import TehnoVizor
+from Windows_.selectMode import Ui_Form
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = TehnoVizor()
+    ex = Ui_Form()
     ex.show()
     sys.exit(app.exec_())
