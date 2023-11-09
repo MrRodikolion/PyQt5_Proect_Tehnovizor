@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1305</width>
-    <height>834</height>
+    <height>769</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,102 +22,54 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_5">
-             <item>
-              <widget class="QPushButton" name="SelectBtn">
-               <property name="text">
-                <string>Выделить</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_4">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
+            <widget class="QPushButton" name="selectBtn">
+             <property name="text">
+              <string>Выделить</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <item>
-              <widget class="QLabel" name="label_2">
-               <property name="text">
-                <string>Чувтсвительность: </string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QSlider" name="thresholdSlider">
-               <property name="minimumSize">
-                <size>
-                 <width>320</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_6">
-             <item>
-              <widget class="QPushButton" name="resetBtn">
-               <property name="text">
-                <string>Сбросить</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_5">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </item>
          <item>
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="saveImgBtn">
-           <property name="text">
-            <string>Сохранить</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Чувтсвительность: </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSlider" name="thresholdSlider">
+             <property name="minimumSize">
+              <size>
+               <width>320</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
@@ -148,13 +100,6 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QPushButton" name="scanBtn">
-           <property name="text">
-            <string>Сканировать</string>
-           </property>
-          </widget>
-         </item>
          <item>
           <spacer name="horizontalSpacer_2">
            <property name="orientation">

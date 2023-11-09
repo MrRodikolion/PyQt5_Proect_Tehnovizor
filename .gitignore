@@ -3,8 +3,8 @@ lab/
 tesseract/
 .idea/
 
-uis/cool_ui.py
-uis/SelectMode_ui.py
-uis/BookScan_ui.py
+uis/*.py
 
-history_db.sqlite3
+*.sqlite3
+
+imgs
