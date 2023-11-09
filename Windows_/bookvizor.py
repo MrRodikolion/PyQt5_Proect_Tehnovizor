@@ -32,8 +32,8 @@ class BookVizor(QMainWindow):
         except Exception:
             pass
 
-        for y, filename in enumerate(os.listdir('../imgs/')):
-            file_path = os.path.join('../imgs/', filename)
+        for y, filename in enumerate(os.listdir('./imgs/')):
+            file_path = os.path.join('./imgs/', filename)
             os.replace(file_path, os.path.join(img_dir, filename))
 
         text = self.textEdit.toPlainText()
@@ -48,8 +48,8 @@ class BookVizor(QMainWindow):
 
     def loadTable(self):
         self.tableWidget.setRowCount(0)
-        for y, filename in enumerate(os.listdir('../imgs/')):
-            file_path = os.path.join('../imgs/', filename)
+        for y, filename in enumerate(os.listdir('./imgs/')):
+            file_path = os.path.join('./imgs/', filename)
 
             self.tableWidget.setRowCount(self.tableWidget.rowCount() + 1)
 
@@ -73,11 +73,11 @@ class BookVizor(QMainWindow):
 
             self.tableWidget.removeRow(row)
             del self.pages[row]
-            os.unlink(f'../imgs/page_{row}.jpg')
+            os.unlink(f'./imgs/page_{row}.jpg')
 
-            path_dir = sorted(os.listdir('../imgs/'), key=lambda x: int(x[x.index('_') + 1:-4]))
+            path_dir = sorted(os.listdir('./imgs/'), key=lambda x: int(x[x.index('_') + 1:-4]))
             for n, filename in enumerate(path_dir):
-                file_path = os.path.join('../imgs/', filename)
+                file_path = os.path.join('./imgs/', filename)
                 new_file_path = file_path.replace(filename, f'page_{n}.jpg')
                 os.rename(file_path, new_file_path)
 
@@ -92,8 +92,8 @@ class BookVizor(QMainWindow):
     def closeEvent(self, a0):
         self.cam_th.stop()
         self.hide()
-        for filename in os.listdir('../imgs/'):
-            file_path = os.path.join('../imgs/', filename)
+        for filename in os.listdir('./imgs/'):
+            file_path = os.path.join('./imgs/', filename)
             try:
                 if os.path.isfile(file_path) or os.path.islink(file_path):
                     os.unlink(file_path)
@@ -107,7 +107,7 @@ class BookVizor(QMainWindow):
 
         try:
             if self.book_img_data[1] is not None:
-                cv2.imwrite(f'C:\\Users\\Mr.Rodikolion\\PycharmProjects\\yandex_PyQt5/imgs/page_{len(self.pages)}.jpg',
+                cv2.imwrite(f'./imgs/page_{len(self.pages)}.jpg',
                             self.book_img_data[1])
 
                 gray = cv2.cvtColor(self.book_img_data[1], cv2.COLOR_BGR2GRAY)

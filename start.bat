@@ -4,4 +4,4 @@ call %root%\Scripts\activate.bat %root%
 
 call conda activate yan_proj
 
-call python main.py
+call python Windows_/selectMode.py
