@@ -12,7 +12,13 @@ import os
 
 class BookVizor(QMainWindow):
     def __init__(self):
-        pytesseract.pytesseract.tesseract_cmd = "C:\\Users\\Mr.Rodikolion\\PycharmProjects\\yandex_PyQt5\\tesseract/tesseract.exe"
+        pytesseract.pytesseract.tesseract_cmd = \
+            "C:\\Users\\Mr.Rodikolion\\PycharmProjects\\yandex_PyQt5\\tesseract/tesseract.exe"
+        try:
+            os.mkdir('./imgs')
+        except Exception:
+            pass
+
         super().__init__()
         self.setupUi(self)
         self.startThreads()

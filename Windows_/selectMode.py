@@ -1,3 +1,4 @@
+import os
 import sys
 
 from Windows_.tehnovizor import TehnoVizor
@@ -24,7 +25,6 @@ class Ui_Form(QWidget):
         self.hide()
         self.book = BookVizor()
         self.book.show()
-
 
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -58,7 +58,9 @@ class Ui_Form(QWidget):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
-        self.label.setText(_translate("Form", "<html><head/><body><p><span style=\" font-size:18pt;\">ТекстоВизор</span></p></body></html>"))
+        self.label.setText(_translate("Form",
+                                      "<html><head/><body><p>"
+                                      "<span style=\" font-size:18pt;\">ТекстоВизор</span></p></body></html>"))
         self.normModeBtn.setText(_translate("Form", "Обычный режим"))
         self.bookModeBtn.setText(_translate("Form", "Режим сканирования книг"))
 
